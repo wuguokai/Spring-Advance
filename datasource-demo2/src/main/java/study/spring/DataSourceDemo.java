@@ -18,7 +18,7 @@ public class DataSourceDemo {
     public static void main(String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext*.xml");
         showBeans(applicationContext);
-        dataSourceDemo(applicationContext);
+        showDataSource(applicationContext);
     }
 
     @Bean(destroyMethod = "close")
@@ -32,11 +32,6 @@ public class DataSourceDemo {
 
     public static void showBeans(ApplicationContext applicationContext) {
         System.out.println(Arrays.toString(applicationContext.getBeanDefinitionNames()));
-    }
-
-
-    public static void dataSourceDemo(ApplicationContext applicationContext) {
-        showDataSource(applicationContext);
     }
 
     public static void showDataSource(ApplicationContext applicationContext) {

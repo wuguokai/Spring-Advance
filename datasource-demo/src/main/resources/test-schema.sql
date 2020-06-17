@@ -1,0 +1,1 @@
+create table foo (id INT IDENTITY, bar VARCHAR(64));
