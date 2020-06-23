@@ -1,0 +1,1 @@
+create table if not exists foo (id int identity, bar varchar(64));
