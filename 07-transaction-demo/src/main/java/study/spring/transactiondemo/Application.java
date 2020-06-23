@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+import study.spring.transactiondemo.service.FooService;
 
 @Slf4j
 @SpringBootApplication
@@ -20,12 +21,37 @@ public class Application implements CommandLineRunner {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private FooService fooService;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
     @Override
     public void run(String... args) throws Exception {
+        programTransactionTest();
+        declareTransactionTest();
+    }
+
+    private void declareTransactionTest() {
+        fooService.insertRecord();
+        log.info("AAA: {}", jdbcTemplate.queryForObject("select count(*) from foo where bar='AAA'", Long.class));
+
+        try {
+            fooService.insertThenRollback();
+        } catch (Exception e) {
+            log.info("BBB: {}", jdbcTemplate.queryForObject("select count(*) from foo where bar ='BBB'", Long.class));
+        }
+
+        try {
+            fooService.invokeInsertThenRollback();
+        } catch (Exception e) {
+            log.info("2-BBB: {}", jdbcTemplate.queryForObject("select count (*) from foo where bar ='BBB'", Long.class));
+        }
+    }
+
+    private void programTransactionTest() {
         log.info("COUNT BEFORE TRANSACTION: {}", getCount());
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
